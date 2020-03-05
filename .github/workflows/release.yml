@@ -1,0 +1,20 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: go test
+        run: go test ./...
+      - name: ci-tools
+        run: make ci-tools
+      - name: release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: npx semantic-release --no-dry-run
